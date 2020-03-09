@@ -3,7 +3,6 @@ import random
 import numpy as np
 import pandas as pd
 import os
-import shutil
 
 
 # question and answer examples
@@ -17,7 +16,8 @@ class QandA:
             "Riyan Kim",
             "Haaroon Yousaf",
             "Dean Mohamedally",
-            "Yun Fu"
+            "Yun Fu",
+            "i am toeun"
         ],
 
         "What is the name of the contact person in your organization?": [
@@ -123,19 +123,11 @@ class GenerateTest:
     def __init__(self, filename):
         dirname = os.path.dirname(__file__)
         filepath = os.path.join(dirname, filename)
-        organisation_name = filename[0:filename.index('.')]  # string before the first dot
+        organisation_name = filename[5: filename.index('.')]  # string before the first dot
         self.target_path = os.path.join(dirname, "target", organisation_name)
         self.data = CSVData().csv_data(filepath)
         self.initial_q_and_a = self.q_and_a.initial_QandA
         del dirname, filepath, organisation_name
-
-    def line_down(self, num):
-        # list_iterator = iter(('a', 'd', 'c', 'd'))
-        #
-        # for a in list_iterator:
-        #     if a == 'a':
-        #         list_iterator.next()
-        pass
 
     def generate_initial(self):
         initials = self.data[:len(self.initial_q_and_a)]
@@ -155,25 +147,52 @@ class GenerateTest:
             Look body[YES]
             if that was not digit:
                 history.append([body[YES], ""])
+                break
             else if that was a digit:
+                skip the digit number of rows
+                continue
                 
-        
         else if yes_or_no => no:
             Look body[NO]
+            if that was not digit:
+                history.append([body[NO], ""])
+                break
+            else if that was a digit:
+                skip the digit number of rows
+                continue
     """
     def generate_body(self):
-        bodies = self.data[len(self.initial_q_and_a):]
-        while True:
-            for body in bodies:
-                # 1 -> yes  2 -> no
-                yes_or_no = random.randint(1, 2)
-                if yes_or_no == 1:
-                    rand_answer = self.q_and_a.random_yes()
-                else:
-                    rand_answer = self.q_and_a.random_no()
-
+        bodies = iter(self.data[len(self.initial_q_and_a):])
+        for body in bodies:
+            # 1 -> yes  2 -> no
+            yes_or_no = random.randint(1, 2)
+            if yes_or_no == 1:
+                rand_answer = self.q_and_a.random_yes()
                 self.history.append([body[QUESTION], rand_answer])
 
+                if not body[YES].isdigit():
+                    self.history.append([body[YES], ""])
+                    break
+                else:  # body[YES] is digit
+                    for _ in range(int(body[YES]) - 1):   # skip rows
+                        next(bodies)
+                    continue
+
+            else:   # yes_or_no==2 (NO)
+                rand_answer = self.q_and_a.random_no()
+                self.history.append([body[QUESTION], rand_answer])
+
+                if not body[NO].isdigit():
+                    self.history.append([body[NO], ""])
+                    break
+                else:  # body[NO] is digit
+                    for _ in range(int(body[NO]) - 1):  # skip rows
+                        next(bodies)
+                    continue
+
+        # Debugging purpose
+        # for x in self.history:
+        #     print(x)
 
 
 
@@ -193,9 +212,9 @@ class GenerateTest:
         self.create_csv_file(i)
 
 if __name__ == '__main__':
-
-    gen = GenerateTest("MHRA.csv")
-    gen.generate_body()
+    separator = os.path.sep
+    gen = GenerateTest("tree" + separator + "MHRA.csv")
+    gen.generate()
 
 
     # generate 10 test cases
