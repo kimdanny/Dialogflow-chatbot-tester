@@ -54,15 +54,23 @@ class QandA:
         "no",
     ]
 
-    def random_yes(self):
+    @staticmethod
+    def generate_seed(seed=None):
+        if seed is not None:
+            random.seed(seed)
+
+    def random_yes(self, seed=None):
+        self.generate_seed(seed)
         rand_index = random.randint(0, len(self.Yeses) - 1)
         return self.Yeses[rand_index]
 
-    def random_no(self):
+    def random_no(self, seed=None):
+        self.generate_seed(seed)
         rand_index = random.randint(0, len(self.Nos) - 1)
         return self.Nos[rand_index]
 
-    def random_initial_answer_for(self, question):
+    def random_initial_answer_for(self, question, seed=None):
+        self.generate_seed(seed)
         answerList = self.initial_QandA.get(question)
         rand_index = random.randint(0, len(answerList) - 1)
         return self.initial_QandA[question][rand_index]
@@ -80,7 +88,8 @@ class CSVData:
     if string is "You are unhealthy", will return "You are unhealthy"
     """
 
-    def format_possible_offset(self, string):
+    @staticmethod
+    def format_possible_offset(string):
         s = string.split(" ", 1)
         if s[0].isdigit():
             return s[0]
@@ -132,7 +141,7 @@ class GenerateTest:
     def generate_initial(self):
         initials = self.data[:len(self.initial_q_and_a)]
         for initial in initials:
-            rand_answer = self.q_and_a.random_initial_answer_for(initial[QUESTION])
+            rand_answer = self.q_and_a.random_initial_answer_for(initial[QUESTION])  # TODO: seed
             self.history.append([initial[QUESTION], rand_answer])
 
     """
@@ -161,25 +170,26 @@ class GenerateTest:
                 skip the digit number of rows
                 continue
     """
+
     def generate_body(self):
         bodies = iter(self.data[len(self.initial_q_and_a):])
         for body in bodies:
             # 1 -> yes  2 -> no
             yes_or_no = random.randint(1, 2)
             if yes_or_no == 1:
-                rand_answer = self.q_and_a.random_yes()
+                rand_answer = self.q_and_a.random_yes()  # TODO: seed
                 self.history.append([body[QUESTION], rand_answer])
 
                 if not body[YES].isdigit():
                     self.history.append([body[YES], ""])
                     break
                 else:  # body[YES] is digit
-                    for _ in range(int(body[YES]) - 1):   # skip rows
+                    for _ in range(int(body[YES]) - 1):  # skip rows
                         next(bodies)
                     continue
 
-            else:   # yes_or_no==2 (NO)
-                rand_answer = self.q_and_a.random_no()
+            else:  # yes_or_no==2 (NO)
+                rand_answer = self.q_and_a.random_no()  # TODO: seed
                 self.history.append([body[QUESTION], rand_answer])
 
                 if not body[NO].isdigit():
@@ -190,34 +200,31 @@ class GenerateTest:
                         next(bodies)
                     continue
 
-        # Debugging purpose
-        # for x in self.history:
-        #     print(x)
-
-
-
     def create_text_file(self, i=0):
         pass
 
     def create_csv_file(self, i=0):
-        # x = np.array(self.history)
-        # df = pd.DataFrame(do sth with x)
-        # df.to_csv(os.path.join(self.target_path, f"convos{i}.csv"), encoding='utf-8')
-        pass
+        history_array = np.array(self.history)
+        df = pd.DataFrame(history_array)
+        df.to_csv(os.path.join(self.target_path, f"convos{i}.csv"), encoding='utf-8')
+        del history_array
 
     def generate(self, i=0):
         self.generate_initial()
         self.generate_body()
+        # Debugging purpose
+        # for x in self.history:
+        #     print(x)
         self.create_text_file(i)
         self.create_csv_file(i)
 
+
 if __name__ == '__main__':
     separator = os.path.sep
-    gen = GenerateTest("tree" + separator + "MHRA.csv")
-    gen.generate()
 
 
     # generate 10 test cases
-    # for index in range(10):
-    #     gen = GenerateTest("MHRA.csv")
-    #     gen.generate(index)
+    # TODO: BUG. object is not being generated dynamically. so csv is getting bigger (trailing)
+    for index in range(10):
+        gen = GenerateTest("tree" + separator + "MHRA.csv")
+        gen.generate(i=index)
