@@ -2,6 +2,7 @@
 .idea
 __pycache__
 
+# where files are generated
 target
 
 .DS_Store

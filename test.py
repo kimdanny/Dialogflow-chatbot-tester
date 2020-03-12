@@ -79,7 +79,7 @@ class QandA:
 QUESTION = 0
 YES = 1
 NO = 2
-CLARIFICATION = 3
+CLARIFICATION = 3 # TODO: process clarification
 IDENTIFIER = 4
 
 
