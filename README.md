@@ -8,3 +8,11 @@
 3. Place the csv file in directory named, `tree`.
 
 4. Run `test.py`
+
+
+
+## Author
+* [To Eun Kim](https://github.com/kimdanny)
+
+## License
+This project is licensed under the MIT License- see the [LICENSE.md](LICENSE.md) file for details
