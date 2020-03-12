@@ -79,7 +79,8 @@ class QandA:
 QUESTION = 0
 YES = 1
 NO = 2
-IDENTIFIER = 3
+CLARIFICATION = 3
+IDENTIFIER = 4
 
 
 class CSVData:
@@ -131,8 +132,8 @@ class GenerateTest:
 
     def __init__(self, filename):
         dirname = os.path.dirname(__file__)
-        filepath = os.path.join(dirname, filename)
-        organisation_name = filename[5: filename.index('.')]  # string before the first dot
+        filepath = os.path.join(dirname, "tree", filename)
+        organisation_name = filename[: filename.index('.')]  # string before the first dot
         self.target_path = os.path.join(dirname, "target", organisation_name)
         self.data = CSVData().csv_data(filepath)
         self.initial_q_and_a = self.q_and_a.initial_QandA
@@ -217,14 +218,13 @@ class GenerateTest:
         #     print(x)
         self.create_text_file(i)
         self.create_csv_file(i)
+        self.history = []   # clean history for many generations # TODO: why doesn't this work?
 
 
 if __name__ == '__main__':
-    separator = os.path.sep
-
 
     # generate 10 test cases
-    # TODO: BUG. object is not being generated dynamically. so csv is getting bigger (trailing)
     for index in range(10):
-        gen = GenerateTest("tree" + separator + "MHRA.csv")
+        gen = GenerateTest("MHRA.csv")
+        gen.history = []
         gen.generate(i=index)
