@@ -24,6 +24,40 @@ class QandA:
             "He is Anthony Connor",
             "John Doe",
             "Joseph"
+        ],
+
+        # TODO: Can you generate strings based on regex?
+        "What is their email address?": [
+            "adfaff@email.com",
+            "sampleemail@gmail.com",
+            "123email456@gmail.com",
+            "email456thisone@hotmail.com",
+            "1iam2sohot3baby@hotbaby.co.uk",
+            "thisisfake@fakeuni.ac.fakecountrycode",
+        ],
+
+        "What is their phone number?": [
+            "01012345678",
+            "074847572823",
+            "It is +447394817293",
+            "+447394817293",
+            "+3569877675525",
+            "It's 07394817293",
+        ],
+
+        "What is your organisation's name": [
+            "carefulai",
+            "it is Google",
+            "it's called Facebook",
+            "RCGP",
+            "the name of the organisation is named carefulAI"
+        ],
+
+        "What is your organisation's address?": [
+            "24 bedford way",
+            "it is 48 marchmount street, London",
+            "Lebus St. Tottenham Hale, London N17 9FD",
+            "It's Lebus St. Tottenham Hale, London N17 9FD"
         ]
     }
 
@@ -37,7 +71,7 @@ class QandA:
         "y",
         "right",
         "yes it does",
-        "yes",
+        "yes"
     ]
 
     Nos = [
@@ -51,8 +85,35 @@ class QandA:
         "n",
         "wrong",
         "no it does not",
-        "no",
+        "no"
     ]
+
+    Clarification = [
+        "what?",
+        "can you say that in a different way",
+        "could you specify?",
+        "clarify",
+        "clarify that please",
+        "again?",
+        "say that again?",
+        "phrase it differently",
+        "phrase it again?",
+        "what does that mean",
+        "what's that?",
+        "what's dat",
+        "what is it"
+    ]
+
+    MHRA_end_of_conversation = [
+        "Great! You’re all set!",
+        "Your MD belongs to Class I.",
+        "Your MD belongs to Class IIa.",
+        "Your MD belongs to Class IIb.",
+        "Your MD belongs to Class III."
+    ]
+
+    # TODO
+    # NICE_end_of_conversation = []
 
     @staticmethod
     def generate_seed(seed=None):
@@ -68,6 +129,11 @@ class QandA:
         self.generate_seed(seed)
         rand_index = random.randint(0, len(self.Nos) - 1)
         return self.Nos[rand_index]
+
+    def random_clarification(self, seed=None):
+        self.generate_seed(seed)
+        rand_index = random.randint(0, len(self.Clarification) - 1)
+        return self.Clarification[rand_index]
 
     def random_initial_answer_for(self, question, seed=None):
         self.generate_seed(seed)
@@ -107,6 +173,8 @@ class CSVData:
             for row in csv_reader:
                 row[YES] = self.format_possible_offset(row[YES])
                 row[NO] = self.format_possible_offset(row[NO])
+                # row[CLARIFICATION] = self.format_possible_offset(row[CLARIFICATION]) --> no need
+                # del row[CLARIFICATION] # TODO: make it work without this
                 del row[IDENTIFIER]
 
                 data.append(row)
@@ -148,58 +216,46 @@ class GenerateTest:
     """
     <Algorithm>
     while not the end of the list:
+        check if it is end of the conversation
+    
         randomly choose yes or no
             when yes -> randomly choose yes answer from q_and_a Yeses
             when no -> randomly choose no answer from q_and_a Nos
             
-        history.append([body[QUESTION], randomly_selected_answer])
         if yes_or_no => yes:
-            Look body[YES]
-            if that was not digit:
-                history.append([body[YES], ""])
-                break
-            else if that was a digit:
-                skip the digit number of rows
-                continue
+            history.append([body[QUESTION], randomly_selected_answer])            
+            skip the digit number of rows
+            continue
                 
-        else if yes_or_no => no:
-            Look body[NO]
-            if that was not digit:
-                history.append([body[NO], ""])
-                break
-            else if that was a digit:
-                skip the digit number of rows
-                continue
+        else yes_or_no => no:
+            history.append([body[QUESTION], randomly_selected_answer])            
+            skip the digit number of rows
+            continue
     """
 
     def generate_body(self):
         bodies = iter(self.data[len(self.initial_q_and_a):])
         for body in bodies:
+            # base case
+            if body[QUESTION] in self.q_and_a.MHRA_end_of_conversation:
+                self.history.append([body[QUESTION], ""])
+                break
+
             # 1 -> yes  2 -> no
             yes_or_no = random.randint(1, 2)
             if yes_or_no == 1:
                 rand_answer = self.q_and_a.random_yes()  # TODO: seed
                 self.history.append([body[QUESTION], rand_answer])
-
-                if not body[YES].isdigit():
-                    self.history.append([body[YES], ""])
-                    break
-                else:  # body[YES] is digit
-                    for _ in range(int(body[YES]) - 1):  # skip rows
-                        next(bodies)
-                    continue
+                for _ in range(int(body[YES]) - 1):  # skip rows
+                    next(bodies)
+                continue
 
             else:  # yes_or_no==2 (NO)
                 rand_answer = self.q_and_a.random_no()  # TODO: seed
                 self.history.append([body[QUESTION], rand_answer])
-
-                if not body[NO].isdigit():
-                    self.history.append([body[NO], ""])
-                    break
-                else:  # body[NO] is digit
-                    for _ in range(int(body[NO]) - 1):  # skip rows
-                        next(bodies)
-                    continue
+                for _ in range(int(body[NO]) - 1):  # skip rows
+                    next(bodies)
+                continue
 
     def create_text_file(self, i=0):
         pass
@@ -222,6 +278,13 @@ class GenerateTest:
 
 
 if __name__ == '__main__':
+
+    # csvdata = CSVData()
+    # data = csvdata.csv_data("./tree/MHRA.csv")
+    #
+    # for x in data:
+    #     if len(x[CLARIFICATION]) is not 0:
+    #         print(x)
 
     # generate 10 test cases
     for index in range(10):
