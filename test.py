@@ -25,3 +25,6 @@ print(r.text)
 # req.add_header('Content-Length', len(jsondataasbytes))
 # print (jsondataasbytes)
 # response = urllib.request.urlopen(req, jsondataasbytes)
+
+
+# TODO: Compare

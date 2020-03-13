@@ -7,7 +7,9 @@
 
 3. Place the csv file in directory named, `tree`.
 
-4. Run `test.py`
+4. Clone [Chatbot Backend](https://github.com/ryanchuah/compliance-backend) and run the server.
+
+5. Come back to tester again and Run `test.py`
 
 
 
