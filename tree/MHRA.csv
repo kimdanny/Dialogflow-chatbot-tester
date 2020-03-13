@@ -59,8 +59,8 @@ Is the MD specifically to be used for disinfecting invasive MDs?,7 lines down,6 
 Is the MD intended for recording of X-ray diagnostic images?,5 lines down,1 Line down,,recording of X-ray
 Does the MD utilize non-viable animal tissues or derivatives (not devices in contact with only intact skin)?,6 lines down,1 Line down,,Non-viable animal tissues
 Is the MD a blood bag?,4 lines down,Error,,blood bag
-"Great! You’re all set! ",,,,already knows MHRA class
-"Your MD belongs to Class I. ",,,,class I
+Great! You’re all set!,,,,already knows MHRA class
+Your MD belongs to Class I.,,,,class I
 Your MD belongs to Class IIa.,,,,class IIa
-"Your MD belongs to Class IIb. ",,,,class IIb
+Your MD belongs to Class IIb.,,,,class IIb
 Your MD belongs to Class III.,,,,class III
