@@ -14,6 +14,11 @@ class TestFailError(Error):
     def __init__(self, msg):
         print(msg)
 
+class StatusCodeError(Error):
+    """Raised when HTTTP Status code is not 200"""
+    def __init__(self, msg):
+        print(msg)
+
 
 API_END_POINT = "http://localhost:5000/api/inputText"
 
@@ -26,11 +31,14 @@ def post_request(userMessage):
     header = {"Content-Type": "application/json"}
 
     res = requests.post(API_END_POINT, json=body, headers=header)
+
+    if res.status_code is not 200:
+        raise StatusCodeError("HTTP Error")
     res = res.json()["message"]
     return res
 
 
-files = ["MHRA.csv", "NICE.csv"]  # "MHRA.csv", "NHSD.csv", "NICE.csv"
+files = ["MHRA.csv"]  # "MHRA.csv", "NHSD.csv", "NICE.csv"
 
 # generate 10 test cases
 for file in files:
@@ -48,7 +56,7 @@ for file in files:
                     if post_request(conversation[i][1]) == conversation[i + 1][0]:
                         pass
                     else:
-                        raise TestFailError(f"{gen.organisation_name} convos{index}Test => FAIL")
+                        raise TestFailError(f"{gen.organisation_name} convos{index} Test => FAIL")
 
             except TestFailError:
                 pass
