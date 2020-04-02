@@ -1,33 +1,57 @@
 from generate import GenerateConversation
-import urllib.request
-import json
 import requests
+
+
+# define Python user-defined exceptions
+class Error(Exception):
+    """Base class for other exceptions"""
+    def __init__(self):
+        super().__init__()
+
+
+class TestFailError(Error):
+    """Raised when test is failed"""
+    def __init__(self, msg):
+        print(msg)
+
 
 API_END_POINT = "http://localhost:5000/api/inputText"
 
-generateConversation = GenerateConversation("MHRA.csv")
-conversation = generateConversation.generate()
-print(conversation)
-# TODO: process user message
-userMessage = "fuck you"
-body = {
-        "message"   : userMessage,
-        "sessionID" : "Danny"
-        }
-header = {"Content-Type": "application/json"}
 
-# Method 1
-r = requests.post(API_END_POINT, json=body, headers=header)
-print(r.text)
+def post_request(userMessage):
+    body = {
+        "message": userMessage,
+        "sessionID": "Danny"
+    }
+    header = {"Content-Type": "application/json"}
 
-# Method 2
-# req = urllib.request.Request(API_END_POINT)
-# req.add_header('Content-Type', 'application/json')
-# jsondata = json.dumps(body)
-# jsondataasbytes = jsondata.encode('utf-8')   # needs to be bytes
-# # req.add_header('Content-Length', len(jsondataasbytes))
-# print (jsondataasbytes)
-# response = urllib.request.urlopen(req, jsondataasbytes)
-# print(response)
+    res = requests.post(API_END_POINT, json=body, headers=header)
+    res = res.json()["message"]
+    return res
 
-# TODO: Compare
+
+files = ["MHRA.csv", "NICE.csv"]  # "MHRA.csv", "NHSD.csv", "NICE.csv"
+
+# generate 10 test cases
+for file in files:
+        for index in range(10):
+            try:
+                gen = GenerateConversation(file)
+                gen.history = []
+                conversation = gen.generate(i=index)
+                print("\n=========", gen.organisation_name, f"convos{index} is generated and ready to be tested =========")
+
+                # TODO: compare with real here
+                for i in range(len(conversation)):
+                    if len(conversation[i][1]) == 0:
+                        print(f"{gen.organisation_name} convos{index} Test => Success")
+                    if post_request(conversation[i][1]) == conversation[i + 1][0]:
+                        pass
+                    else:
+                        raise TestFailError(f"{gen.organisation_name} convos{index}Test => FAIL")
+
+            except TestFailError:
+                pass
+
+            except Exception as ex:
+                print(f"Error {type(ex)} Occurred in {gen.organisation_name} -> convos{index}.csv")

@@ -64,11 +64,11 @@ class GenerateConversation:
     def __init__(self, filename):
         dirname = os.path.dirname(__file__)
         filepath = os.path.join(dirname, "tree", filename)
-        organisation_name = filename[: filename.index('.')]  # string before the first dot
-        self.target_path = os.path.join(dirname, "target", organisation_name)
+        self.organisation_name = filename[: filename.index('.')]  # string before the first dot
+        self.target_path = os.path.join(dirname, "target", self.organisation_name)
         self.data = CSVData().csv_data(filepath)
         self.initial_q_and_a = self.q_and_a.initial_QandA
-        del dirname, filepath, organisation_name
+        del dirname, filepath
 
     def say_hello(self):
         self.history.append(["", self.q_and_a.random_hello()])
@@ -142,18 +142,3 @@ class GenerateConversation:
         self.create_text_file(i)
         self.create_csv_file(i)
         return self.history
-
-if __name__ == '__main__':
-
-    # csvdata = CSVData()
-    # data = csvdata.csv_data("./tree/MHRA.csv")
-    #
-    # for x in data:
-    #     if len(x[CLARIFICATION]) is not 0:
-    #         print(x)
-
-    # generate 10 test cases
-    for index in range(10):
-        gen = GenerateConversation("MHRA.csv")
-        gen.history = []
-        gen.generate(i=index)
