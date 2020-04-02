@@ -3,7 +3,7 @@
 1. You need to first build csv formatted file from 
 [chatbot-builder from tree](https://github.com/ryanchuah/chatbot-builder-from-tree)
 
-2. Name your csv file as \[organisation_name\].csv
+2. For Unit Testing, name your csv file as \[organisation_name\].csv
 
 3. Place the csv file in directory named, `tree`.
 
@@ -11,7 +11,8 @@
 
 5. Come back to tester again and Run `test.py`
 
-
+# Extensibility
+1. Generate an HTML report
 
 ## Author
 * [To Eun Kim](https://github.com/kimdanny)

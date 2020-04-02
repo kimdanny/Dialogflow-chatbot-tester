@@ -9,10 +9,10 @@ generateConversation = GenerateConversation("MHRA.csv")
 conversation = generateConversation.generate()
 print(conversation)
 # TODO: process user message
-userMessage = "hi"
+userMessage = "fuck you"
 body = {
         "message"   : userMessage,
-        "sessionID" : "ryan"
+        "sessionID" : "Danny"
         }
 header = {"Content-Type": "application/json"}
 
