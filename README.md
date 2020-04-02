@@ -13,6 +13,7 @@
 
 # Extensibility
 1. Generate an HTML report
+2. Create convos.txt file
 
 ## Author
 * [To Eun Kim](https://github.com/kimdanny)
