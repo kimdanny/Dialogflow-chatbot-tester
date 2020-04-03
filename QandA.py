@@ -4,92 +4,93 @@ import random
 # question and answer examples
 class QandA:
     helloMessage_from_user = [
-        "hi",
-        "hello",
-        "hey",
-        "I want to start the chat",
-        "let's start",
-        "hey man"
+        # "hello",
+        # "hey",
+        # "I want to start the chat",
+        # "let's start",
+        # "hey man",
+        "hi"
     ]
 
     initial_QandA = {
         "What’s your name?": [
-            "I'm Danny",
-            "Ryan Zhao",
-            "I am Xinyao Chuah",
-            "my name is Joseph Connor",
-            "Riyan Kim",
-            "Haaroon Yousaf",
-            "Dean Mohamedally",
-            "Yun Fu",
-            "i am toeun"
+            # "I'm Danny",
+            # "Ryan Zhao",
+            # "I am Xinyao Chuah",
+            # "my name is Joseph Connor",
+            # "Riyan Kim",
+            # "Haaroon Yousaf",
+            # "Dean Mohamedally",
+            # "Yun Fu",
+            # "i am toeun",
+            "my name is danny"
         ],
 
         "What is the name of the contact person in your organization?": [
-            "He is Anthony Connor",
-            "John Doe",
+            # "He is Anthony Connor",
+            # "John Doe",
             "Joseph"
         ],
 
         # TODO: Can you generate strings based on regex?
         "What is their email address?": [
-            "adfaff@email.com",
-            "sampleemail@gmail.com",
-            "123email456@gmail.com",
-            "email456thisone@hotmail.com",
-            "1iam2sohot3baby@hotbaby.co.uk",
-            "thisisfake@fakeuni.ac.fakecountrycode",
+            # "adfaff@email.com",
+            # "123email456@gmail.com",
+            # "email456thisone@hotmail.com",
+            # "1iam2sohot3baby@hotbaby.co.uk",
+            # "thisisfake@fakeuni.ac.fakecountrycode",
+            "sampleemail@gmail.com"
         ],
 
         "What is their phone number?": [
-            "01012345678",
-            "074847572823",
-            "It is +447394817293",
-            "+447394817293",
-            "+3569877675525",
+            # "01012345678",
+            # "074847572823",
+            # "It is +447394817293",
+            # "+447394817293",
+            # "+3569877675525",
             "It's 07394817293",
         ],
 
         "What is your organisation's name": [
-            "carefulai",
-            "it is Google",
-            "it's called Facebook",
-            "RCGP",
-            "the name of the organisation is named carefulAI"
+            # "it is Google",
+            # "it's called Facebook",
+            # "RCGP",
+            # "the name of the organisation is named carefulAI",
+            "carefulai"
         ],
 
         "What is your organisation's address?": [
-            "24 bedford way",
-            "it is 48 marchmount street, London",
-            "Lebus St. Tottenham Hale, London N17 9FD",
-            "It's Lebus St. Tottenham Hale, London N17 9FD"
+            # "24 bedford way",
+            # "Lebus St. Tottenham Hale, London N17 9FD",
+            # "It's Lebus St. Tottenham Hale, London N17 9FD",
+            "it is 48 marchmount street, London"
         ]
     }
 
     Yeses = [
-        "yes that is correct",
-        "that is correct",
-        "they do",
-        "does",
-        "it does",
-        "yup",
-        "y",
-        "right",
-        "yes it does",
+        # "yes that is correct",
+        # "that is correct",
+        # "they do",
+        # "does",
+        # "it does",
+        # "yup",
+        # "y",
+        # "right",
+        # "yes it does",
         "yes"
     ]
 
     Nos = [
-        "no that is not correct",
-        "that is not correct",
-        "that is incorrect",
-        "they don't",
-        "does not",
-        "it doesn't",
-        "nop",
-        "n",
-        "wrong",
-        "no it does not",
+        # "no that is not correct",
+        # "that is not correct",
+        # "that is incorrect",
+        # "they don't",
+        # "does not",
+        # "it doesn't",
+        # "nop",
+        # "n",
+        # "wrong",
+        # "no it does not",
         "no"
     ]
 
@@ -136,8 +137,13 @@ class QandA:
         "Great! You’re all set!"
     ]
 
-    # TODO
-    # NHSD_end_of_conversation = []
+    NHSD_end_of_conversation = [
+        "Great! You’re all set!"
+    ]
+
+    Final_end_of_conversation = [
+        "Great! You’re all set! Now you can look up our suggestions. Next time you visit us, you can look up your previous chat history!"
+    ]
 
     @staticmethod
     def generate_seed(seed=None):
