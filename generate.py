@@ -103,9 +103,22 @@ class GenerateConversation:
         bodies = iter(self.data[len(self.initial_q_and_a):])
         for body in bodies:
             # base case
-            if body[QUESTION] in self.q_and_a.MHRA_end_of_conversation:
-                self.history.append([body[QUESTION], ""])
-                break
+            if self.organisation_name == "MHRA":
+                if body[QUESTION] in self.q_and_a.MHRA_end_of_conversation:
+                    self.history.append([body[QUESTION], ""])
+                    break
+            if self.organisation_name == "NHSD":
+                if body[QUESTION] in self.q_and_a.NHSD_end_of_conversation:
+                    self.history.append([body[QUESTION], ""])
+                    break
+            if self.organisation_name == "NICE":
+                if body[QUESTION] in self.q_and_a.NICE_end_of_conversation:
+                    self.history.append([body[QUESTION], ""])
+                    break
+            if self.organisation_name == "Final":
+                if body[QUESTION] in self.q_and_a.Final_end_of_conversation:
+                    self.history.append([body[QUESTION], ""])
+                    break
 
             # 1 -> yes  2 -> no
             yes_or_no = random.randint(1, 2)
@@ -142,3 +155,10 @@ class GenerateConversation:
         self.create_text_file(i)
         self.create_csv_file(i)
         return self.history
+
+# if __name__ == '__main__':
+#     for index in range(10):
+#         gen = GenerateConversation('Final.csv')
+#         gen.history = []
+#         conversation = gen.generate(i=index)
+#         print(conversation)
