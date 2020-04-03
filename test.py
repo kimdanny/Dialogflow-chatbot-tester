@@ -1,23 +1,7 @@
-from generate import GenerateConversation
 import requests
-
-
-# define Python user-defined exceptions
-class Error(Exception):
-    """Base class for other exceptions"""
-    def __init__(self):
-        super().__init__()
-
-
-class TestFailError(Error):
-    """Raised when test is failed"""
-    def __init__(self, msg):
-        print(msg)
-
-class StatusCodeError(Error):
-    """Raised when HTTTP Status code is not 200"""
-    def __init__(self, msg):
-        print(msg)
+from generate import GenerateConversation
+from CustomError import TestFailError, StatusCodeError, Error
+from QandA import QandA
 
 
 API_END_POINT = "http://localhost:5000/api/inputText"
@@ -37,29 +21,52 @@ def post_request(userMessage):
     res = res.json()["message"]
     return res
 
+# for video demo
+# print(post_request("hi"))
+# print(post_request("my name is danny"))
 
-files = ["MHRA.csv"]  # "MHRA.csv", "NHSD.csv", "NICE.csv"
+files = ["Final.csv"]  # "MHRA.csv", "NHSD.csv", "NICE.csv", "Final.csv"
 
 # generate 10 test cases
 for file in files:
-        for index in range(10):
+
+    if file[:file.index('.')] == "Final":
+        EOCs = QandA.Final_end_of_conversation
+    if file[:file.index('.')] == "MHRA":
+        EOCs = QandA.MHRA_end_of_conversation
+    if file[:file.index('.')] == "NHSD":
+        EOCs = QandA.NHSD_end_of_conversation
+    if file[:file.index('.')] == "NICE":
+        EOCs = QandA.NICE_end_of_conversation
+
+        for index in range(5):
             try:
                 gen = GenerateConversation(file)
-                gen.history = []
+                gen.history = []        # empty the history
                 conversation = gen.generate(i=index)
                 print("\n=========", gen.organisation_name, f"convos{index} is generated and ready to be tested =========")
 
                 # TODO: compare with real here
-                for i in range(len(conversation)):
-                    if len(conversation[i][1]) == 0:
+                for i in range(len(conversation)-1):
+                    # if conversation[i][1] == '':
+                    #     print(f"{gen.organisation_name} convos{index} Test => Success")
+                    # if post_request(conversation[i][1]) == conversation[i + 1][0]:
+                    #     pass
+                    # else:
+                    #     print(post_request(conversation[i][1]), "||", conversation[i + 1][0])
+                    #     raise TestFailError(f"{gen.organisation_name} convos{index} Test => FAIL")
+                    # print(conversation)
+                    # print("=====")
+                    # print(conversation[i][1], "||", conversation[i+1][0])
+                    if conversation[i+1][0] in EOCs:
                         print(f"{gen.organisation_name} convos{index} Test => Success")
-                    if post_request(conversation[i][1]) == conversation[i + 1][0]:
-                        pass
-                    else:
+
+                    if not post_request(conversation[i][1]) == conversation[i + 1][0]:
+                        print(post_request(conversation[i][1]), "||", conversation[i + 1][0])
                         raise TestFailError(f"{gen.organisation_name} convos{index} Test => FAIL")
 
             except TestFailError:
                 pass
 
-            except Exception as ex:
-                print(f"Error {type(ex)} Occurred in {gen.organisation_name} -> convos{index}.csv")
+            except Error as err:
+                print(f"Error {type(err)} Occurred in {gen.organisation_name} -> convos{index}.csv")
