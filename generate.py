@@ -68,7 +68,8 @@ class GenerateConversation:
         self.target_path = os.path.join(dirname, "target", self.organisation_name)
         self.data = CSVData().csv_data(filepath)
         self.initial_q_and_a = self.q_and_a.initial_QandA
-        del dirname, filepath
+        if not os.path.exists(os.path.join(dirname, "target", self.organisation_name)):
+            os.makedirs(f"target/{self.organisation_name}")
 
     def say_hello(self):
         self.history.append(["", self.q_and_a.random_hello()])
@@ -115,7 +116,7 @@ class GenerateConversation:
                 if body[QUESTION] in self.q_and_a.NICE_end_of_conversation:
                     self.history.append([body[QUESTION], ""])
                     break
-            if self.organisation_name == "Final":
+            if self.organisation_name == "FINAL":
                 if body[QUESTION] in self.q_and_a.Final_end_of_conversation:
                     self.history.append([body[QUESTION], ""])
                     break
@@ -137,6 +138,8 @@ class GenerateConversation:
                 continue
 
     def create_text_file(self, i=0):
+        # history_array = self.history
+        # return history_array
         pass
 
     def create_csv_file(self, i=0):
@@ -149,16 +152,13 @@ class GenerateConversation:
         self.say_hello()
         self.generate_initial()
         self.generate_body()
-        # Debugging purpose
-        # for x in self.history:
-        #     print(x)
         self.create_text_file(i)
         self.create_csv_file(i)
         return self.history
 
 # if __name__ == '__main__':
 #     for index in range(10):
-#         gen = GenerateConversation('Final.csv')
+#         gen = GenerateConversation('FINAL.csv')
 #         gen.history = []
 #         conversation = gen.generate(i=index)
 #         print(conversation)
