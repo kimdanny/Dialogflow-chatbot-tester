@@ -32,7 +32,7 @@ def post_request(userMessage):
 if os.path.exists(os.path.join(os.path.dirname(__file__), "target")):
     shutil.rmtree(os.path.join(os.path.dirname(__file__), "target"))
 
-files = ["MHRA.csv", "NHSD.csv", "FINAL.csv"]  # "MHRA.csv", "NHSD.csv", "NICE.csv", "FINAL.csv"
+files = ["FINAL.csv"]  # "MHRA.csv", "NHSD.csv", "NICE.csv", "FINAL.csv"
 
 # ==== Testing Starts Here======
 for file in files:
@@ -46,7 +46,7 @@ for file in files:
     if file[:file.index('.')] == "NICE":
         EOCs = QandA.NICE_end_of_conversation
 
-    for index in range(5):
+    for index in range(10):
         try:
             gen = GenerateConversation(file)
             gen.history = []        # empty the history
@@ -59,10 +59,12 @@ for file in files:
                     print(f"{gen.organisation_name} convos{index} Test => Success")
                     break
 
-                if not post_request(conversation[i][1]) == conversation[i + 1][0]:
+                # CAUTIOUS!! Send only one post request in this for loop!!!
+                res = post_request(conversation[i][1])
+                if not res == conversation[i + 1][0]:
                     print(f"conversation[{i}][0]: ", conversation[i][0], "||")
                     print(f"conversation[{i}][1]: ", conversation[i][1], "||")
-                    print(post_request(conversation[i][1]), "||", conversation[i + 1][0])
+                    print(res, "||", conversation[i + 1][0])
                     raise TestFailError(f"{gen.organisation_name} convos{index} Test => FAIL")
 
         except TestFailError:

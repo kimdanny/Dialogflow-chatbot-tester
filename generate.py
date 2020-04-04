@@ -3,12 +3,13 @@ import random
 import numpy as np
 import pandas as pd
 import os
+import re
 from QandA import QandA
 
 QUESTION = 0
 YES = 1
 NO = 2
-CLARIFICATION = 3 # TODO: process clarification
+CLARIFICATION = 3
 IDENTIFIER = 4
 
 
@@ -34,10 +35,12 @@ class CSVData:
 
             next(csv_reader, None)  # skip header during iteration
             for row in csv_reader:
+                row[QUESTION] = re.sub(r"[\r|\n]|[^a-zA-Z0-9\s!\"#$%&’'()*+,-./:;<=>?@\[\\\]^_`{|}~]", "",
+                                       row[QUESTION])  # remove invalid chars
+                row[CLARIFICATION] = re.sub(r"[\r|\n]|[^a-zA-Z0-9\s!\"#$%&’'()*+,-./:;<=>?@\[\\\]^_`{|}~]", "",
+                                            row[CLARIFICATION])  # remove invalid chars
                 row[YES] = self.format_possible_offset(row[YES])
                 row[NO] = self.format_possible_offset(row[NO])
-                # row[CLARIFICATION] = self.format_possible_offset(row[CLARIFICATION]) --> no need
-                # del row[CLARIFICATION] # TODO: make it work without this
                 del row[IDENTIFIER]
 
                 data.append(row)
