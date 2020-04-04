@@ -65,11 +65,15 @@ class GenerateConversation:
         dirname = os.path.dirname(__file__)
         filepath = os.path.join(dirname, "tree", filename)
         self.organisation_name = filename[: filename.index('.')]  # string before the first dot
-        self.target_path = os.path.join(dirname, "target", self.organisation_name)
+        self.csv_target_path = os.path.join(dirname, "target", "csv", self.organisation_name)
+        self.text_target_path = os.path.join(dirname, "target", "text", self.organisation_name)
         self.data = CSVData().csv_data(filepath)
         self.initial_q_and_a = self.q_and_a.initial_QandA
-        if not os.path.exists(os.path.join(dirname, "target", self.organisation_name)):
-            os.makedirs(f"target/{self.organisation_name}")
+
+        if not os.path.exists(os.path.join(dirname, "target", "csv", self.organisation_name)):
+            os.makedirs(f"target/csv/{self.organisation_name}")
+        if not os.path.exists(os.path.join(dirname, "target", "text", self.organisation_name)):
+            os.makedirs(f"target/text/{self.organisation_name}")
 
     def say_hello(self):
         self.history.append(["", self.q_and_a.random_hello()])
@@ -138,27 +142,35 @@ class GenerateConversation:
                 continue
 
     def create_text_file(self, i=0):
-        # history_array = self.history
-        # return history_array
-        pass
+        history_array = self.history
+
+        file = open(os.path.join(self.text_target_path, f"convos{i}.txt"), "w")
+
+        for i in range(len(history_array)-1):
+            file.write("User: \n")
+            file.write("\t")
+            file.write(history_array[i][1])
+            file.write("\n")
+            file.write("Bot: \n")
+            file.write("\t")
+            file.write(history_array[i+1][0])
+            file.write("\n")
+
+        file.close()
 
     def create_csv_file(self, i=0):
         history_array = np.array(self.history)
         df = pd.DataFrame(history_array)
-        df.to_csv(os.path.join(self.target_path, f"convos{i}.csv"), encoding='utf-8')
+        df.to_csv(os.path.join(self.csv_target_path, f"convos{i}.csv"), encoding='utf-8')
         del history_array
 
-    def generate(self, i=0):
+    def generate(self, i=0, CSV=True, TEXT=True):
         self.say_hello()
         self.generate_initial()
         self.generate_body()
-        self.create_text_file(i)
-        self.create_csv_file(i)
-        return self.history
+        if CSV:
+            self.create_csv_file(i)
+        if TEXT:
+            self.create_text_file(i)
 
-# if __name__ == '__main__':
-#     for index in range(10):
-#         gen = GenerateConversation('FINAL.csv')
-#         gen.history = []
-#         conversation = gen.generate(i=index)
-#         print(conversation)
+        return self.history

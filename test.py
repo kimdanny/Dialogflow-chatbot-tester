@@ -50,7 +50,7 @@ for file in files:
         try:
             gen = GenerateConversation(file)
             gen.history = []        # empty the history
-            conversation = gen.generate(i=index)
+            conversation = gen.generate(i=index, CSV=True, TEXT=True)
             print("\n=========", gen.organisation_name, f"convos{index} is generated and ready to be tested =========")
 
             for i in range(len(conversation)-1):
