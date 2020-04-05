@@ -23,10 +23,6 @@ def post_request(userMessage):
     res = res.json()["message"]
     return res
 
-# for video demo
-# print(post_request("hi"))
-# print(post_request("my name is danny"))
-
 
 # Clear target directory if previously made
 if os.path.exists(os.path.join(os.path.dirname(__file__), "target")):

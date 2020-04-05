@@ -39,8 +39,9 @@ You should see that `target` directory, which contains randomly generated convos
 4. Navigate to **test.py** and place appropriate CSV file name in `files` list and run `test.py`. You can see SUCCESS or FAIL on your terminal for each test case.
 
 ## Extensibility
-1. Generate an HTML report
-2. Make this repository as a package
+1. Include DB checking into testing
+2. Generate an HTML report
+3. Make this repository as a package
 
 ### Author
 * [To Eun Kim](https://github.com/kimdanny)
