@@ -4,7 +4,7 @@
 This test is suitable for chatbots that walk through a decision tree.
 
 ## Requirements
-1. python 3.6 above
+1. python 3.6 or above
 2. [numpy](https://numpy.org/)
 3. [pandas](https://pandas.pydata.org/)
 4. [requests](https://requests.readthedocs.io/en/master/)
